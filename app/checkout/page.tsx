@@ -1,27 +1,29 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import { Navigation } from "@/components/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useCart } from "@/components/cart-provider"
-import { useWallet } from "@solana/wallet-adapter-react"
-import { useToast } from "@/hooks/use-toast"
-import { useRouter } from "next/navigation"
-import { Footer } from "@/components/footer"
-import { Loader2, CreditCard, Wallet } from "lucide-react"
+import type React from "react";
+import { useState } from "react";
+import { Navigation } from "@/components/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useCart } from "@/components/cart-provider";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { Footer } from "@/components/footer";
+import { Loader2, CreditCard, Wallet } from "lucide-react";
+import { useSolanaPayment } from "@/hooks/use-solana-payment";
 
 export default function CheckoutPage() {
-  const { items, total, clearCart } = useCart()
-  const { connected, publicKey, wallet } = useWallet()
-  const { toast } = useToast()
-  const router = useRouter()
+  const { sendSolPayment } = useSolanaPayment();
+  const { items, total, clearCart } = useCart();
+  const { connected, publicKey, wallet } = useWallet();
+  const { toast } = useToast();
+  const router = useRouter();
 
-  const [loading, setLoading] = useState(false)
-  const [paymentMethod, setPaymentMethod] = useState<"sol" | "demo">("demo")
+  const [loading, setLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"sol" | "demo">("demo");
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -30,14 +32,14 @@ export default function CheckoutPage() {
     state: "",
     postalCode: "",
     country: "",
-  })
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
-    }))
-  }
+    }));
+  };
 
   const validateForm = () => {
     if (!formData.fullName || !formData.email || !formData.address) {
@@ -45,51 +47,53 @@ export default function CheckoutPage() {
         title: "Missing Information",
         description: "Please fill in all required fields.",
         variant: "destructive",
-      })
-      return false
+      });
+      return false;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       toast({
         title: "Invalid Email",
         description: "Please enter a valid email address.",
         variant: "destructive",
-      })
-      return false
+      });
+      return false;
     }
 
-    return true
-  }
+    return true;
+  };
 
   const handleDemoPayment = async () => {
-    if (!validateForm()) return
+    if (!validateForm()) return;
 
-    setLoading(true)
+    setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      const orderId = "ZULE" + Date.now().toString(36).toUpperCase()
-      const mockTxHash = "DEMO" + Math.random().toString(36).substring(2, 15).toUpperCase()
+      const orderId = "ZULE" + Date.now().toString(36).toUpperCase();
+      const mockTxHash =
+        "DEMO" + Math.random().toString(36).substring(2, 15).toUpperCase();
 
-      clearCart()
+      clearCart();
 
       toast({
         title: "Demo Payment Successful!",
         description: `Order ${orderId} has been placed successfully.`,
-      })
+      });
 
-      router.push(`/payment-success?orderId=${orderId}&txHash=${mockTxHash}`)
+      router.push(`/payment-success?orderId=${orderId}&txHash=${mockTxHash}`);
     } catch (error) {
       toast({
         title: "Payment Failed",
-        description: "There was an error processing your payment. Please try again.",
+        description:
+          "There was an error processing your payment. Please try again.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleSolPayment = async () => {
     if (!connected || !publicKey) {
@@ -97,46 +101,52 @@ export default function CheckoutPage() {
         title: "Wallet Not Connected",
         description: "Please connect your wallet to pay with SOL.",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
-    if (!validateForm()) return
+    if (!validateForm()) return;
 
-    setLoading(true)
+    setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 3000))
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      const signature = await sendSolPayment(total);
+      const orderId = "ZULE" + Date.now().toString(36).toUpperCase();
 
-      const orderId = "ZULE" + Date.now().toString(36).toUpperCase()
-      const mockTxHash = "SOL" + Math.random().toString(36).substring(2, 15).toUpperCase()
+      // const mockTxHash = "SOL" + Math.random().toString(36).substring(2, 15).toUpperCase()
 
-      clearCart()
+      clearCart();
+
+      // toast({
+      //   title: "SOL Payment Successful!",
+      //   description: `Order ${orderId} has been placed successfully.`,
+      // })
 
       toast({
-        title: "SOL Payment Successful!",
-        description: `Order ${orderId} has been placed successfully.`,
-      })
-
-      router.push(`/payment-success?orderId=${orderId}&txHash=${mockTxHash}`)
+        title: "Payment Successful!",
+        description: `Transaction confirmed: ${signature}`,
+      });
+      router.push(`/payment-success?orderId=${orderId}&txHash=${signature}`);
     } catch (error) {
-      console.error("SOL Payment error:", error)
+      console.error("SOL Payment error:", error);
       toast({
         title: "SOL Payment Failed",
-        description: "There was an error processing your SOL payment. Please try demo payment instead.",
+        description:
+          "There was an error processing your SOL payment. Please try demo payment instead.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handlePayment = () => {
     if (paymentMethod === "sol") {
-      handleSolPayment()
+      handleSolPayment();
     } else {
-      handleDemoPayment()
+      handleDemoPayment();
     }
-  }
+  };
 
   // if (items.length === 0) {
   //   router.push("/cart")
@@ -149,13 +159,17 @@ export default function CheckoutPage() {
 
       <div className="container mx-auto px-4 py-8 flex-1">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-cyan-400 text-center">Secure Checkout</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-cyan-400 text-center">
+            Secure Checkout
+          </h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Shipping Information */}
             <Card className="bg-gray-900/50 border-gray-700 hover:border-cyan-500/50 transition-colors">
               <CardHeader>
-                <CardTitle className="text-xl text-cyan-400">Shipping Information</CardTitle>
+                <CardTitle className="text-xl text-cyan-400">
+                  Shipping Information
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -266,7 +280,9 @@ export default function CheckoutPage() {
             {/* Order Summary & Payment */}
             <Card className="bg-gray-900/50 border-gray-700 hover:border-cyan-500/50 transition-colors">
               <CardHeader>
-                <CardTitle className="text-xl text-cyan-400">Order Summary</CardTitle>
+                <CardTitle className="text-xl text-cyan-400">
+                  Order Summary
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4 mb-6">
@@ -281,7 +297,9 @@ export default function CheckoutPage() {
                           {item.size}, {item.color} × {item.quantity}
                         </p>
                       </div>
-                      <span className="text-cyan-400 font-medium">{(item.price * item.quantity).toFixed(3)} SOL</span>
+                      <span className="text-cyan-400 font-medium">
+                        {(item.price * item.quantity).toFixed(3)} SOL
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -289,17 +307,21 @@ export default function CheckoutPage() {
                 <div className="border-t border-gray-700 pt-4 mb-6">
                   <div className="flex justify-between text-lg font-bold">
                     <span className="text-white">Total:</span>
-                    <span className="text-cyan-400">{total.toFixed(3)} SOL</span>
+                    <span className="text-cyan-400">
+                      {total.toFixed(3)} SOL
+                    </span>
                   </div>
                 </div>
 
                 {/* Payment Method Selection */}
                 <div className="mb-6">
-                  <Label className="text-cyan-400 mb-3 block">Payment Method</Label>
+                  <Label className="text-cyan-400 mb-3 block">
+                    Payment Method
+                  </Label>
                   <div className="grid grid-cols-1 gap-3">
                     <button
                       onClick={() => setPaymentMethod("demo")}
-                      className={`p-4 rounded-lg border transition-all flex items-center space-x-3 ${
+                      className={`p-4 rounded-lg border transition-all hidden items-center space-x-3 ${
                         paymentMethod === "demo"
                           ? "border-cyan-400 bg-cyan-400/10"
                           : "border-gray-600 hover:border-gray-500"
@@ -308,7 +330,9 @@ export default function CheckoutPage() {
                       <CreditCard className="h-5 w-5 text-cyan-400" />
                       <div className="text-left">
                         <p className="font-medium text-white">Demo Payment</p>
-                        <p className="text-sm text-gray-400">For testing purposes</p>
+                        <p className="text-sm text-gray-400">
+                          For testing purposes
+                        </p>
                       </div>
                     </button>
 
@@ -324,7 +348,11 @@ export default function CheckoutPage() {
                       <div className="text-left">
                         <p className="font-medium text-white">Pay with SOL</p>
                         <p className="text-sm text-gray-400">
-                          {connected ? `Connected: ${publicKey?.toString().slice(0, 8)}...` : "Connect wallet required"}
+                          {connected
+                            ? `Connected: ${publicKey
+                                ?.toString()
+                                .slice(0, 8)}...`
+                            : "Connect wallet required"}
                         </p>
                       </div>
                     </button>
@@ -365,5 +393,5 @@ export default function CheckoutPage() {
 
       <Footer />
     </div>
-  )
+  );
 }
