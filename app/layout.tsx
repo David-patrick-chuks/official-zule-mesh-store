@@ -6,6 +6,7 @@ import { WalletContextProvider } from "@/components/wallet-provider"
 import { CartProvider } from "@/components/cart-provider"
 import { Toaster } from "@/components/ui/toaster"
 
+import { Analytics } from "@vercel/analytics/next"
 const orbitron = Orbitron({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${orbitron.className} bg-black text-white min-h-screen flex flex-col`}>
+        <Analytics/>
         <WalletContextProvider>
           <CartProvider>
             <main className="flex-1">{children}</main>
