@@ -1,0 +1,369 @@
+"use client"
+
+import type React from "react"
+import { useState } from "react"
+import { Navigation } from "@/components/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { useCart } from "@/components/cart-provider"
+import { useWallet } from "@solana/wallet-adapter-react"
+import { useToast } from "@/hooks/use-toast"
+import { useRouter } from "next/navigation"
+import { Footer } from "@/components/footer"
+import { Loader2, CreditCard, Wallet } from "lucide-react"
+
+export default function CheckoutPage() {
+  const { items, total, clearCart } = useCart()
+  const { connected, publicKey, wallet } = useWallet()
+  const { toast } = useToast()
+  const router = useRouter()
+
+  const [loading, setLoading] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState<"sol" | "demo">("demo")
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    address: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    country: "",
+  })
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }))
+  }
+
+  const validateForm = () => {
+    if (!formData.fullName || !formData.email || !formData.address) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      })
+      return false
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(formData.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      })
+      return false
+    }
+
+    return true
+  }
+
+  const handleDemoPayment = async () => {
+    if (!validateForm()) return
+
+    setLoading(true)
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+
+      const orderId = "ZULE" + Date.now().toString(36).toUpperCase()
+      const mockTxHash = "DEMO" + Math.random().toString(36).substring(2, 15).toUpperCase()
+
+      clearCart()
+
+      toast({
+        title: "Demo Payment Successful!",
+        description: `Order ${orderId} has been placed successfully.`,
+      })
+
+      router.push(`/payment-success?orderId=${orderId}&txHash=${mockTxHash}`)
+    } catch (error) {
+      toast({
+        title: "Payment Failed",
+        description: "There was an error processing your payment. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSolPayment = async () => {
+    if (!connected || !publicKey) {
+      toast({
+        title: "Wallet Not Connected",
+        description: "Please connect your wallet to pay with SOL.",
+        variant: "destructive",
+      })
+      return
+    }
+
+    if (!validateForm()) return
+
+    setLoading(true)
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 3000))
+
+      const orderId = "ZULE" + Date.now().toString(36).toUpperCase()
+      const mockTxHash = "SOL" + Math.random().toString(36).substring(2, 15).toUpperCase()
+
+      clearCart()
+
+      toast({
+        title: "SOL Payment Successful!",
+        description: `Order ${orderId} has been placed successfully.`,
+      })
+
+      router.push(`/payment-success?orderId=${orderId}&txHash=${mockTxHash}`)
+    } catch (error) {
+      console.error("SOL Payment error:", error)
+      toast({
+        title: "SOL Payment Failed",
+        description: "There was an error processing your SOL payment. Please try demo payment instead.",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handlePayment = () => {
+    if (paymentMethod === "sol") {
+      handleSolPayment()
+    } else {
+      handleDemoPayment()
+    }
+  }
+
+  // if (items.length === 0) {
+  //   router.push("/cart")
+  //   return null
+  // }
+
+  return (
+    <div className="min-h-screen bg-black flex flex-col">
+      <Navigation />
+
+      <div className="container mx-auto px-4 py-8 flex-1">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-cyan-400 text-center">Secure Checkout</h1>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Shipping Information */}
+            <Card className="bg-gray-900/50 border-gray-700 hover:border-cyan-500/50 transition-colors">
+              <CardHeader>
+                <CardTitle className="text-xl text-cyan-400">Shipping Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="fullName" className="text-gray-300">
+                      Full Name *
+                    </Label>
+                    <Input
+                      id="fullName"
+                      name="fullName"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      className="bg-gray-800 border-gray-600 focus:border-cyan-400 text-white"
+                      placeholder="John Doe"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email" className="text-gray-300">
+                      Email *
+                    </Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="bg-gray-800 border-gray-600 focus:border-cyan-400 text-white"
+                      placeholder="john@example.com"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="address" className="text-gray-300">
+                    Address *
+                  </Label>
+                  <Input
+                    id="address"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    className="bg-gray-800 border-gray-600 focus:border-cyan-400 text-white"
+                    placeholder="123 Main Street"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="city" className="text-gray-300">
+                      City
+                    </Label>
+                    <Input
+                      id="city"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      className="bg-gray-800 border-gray-600 focus:border-cyan-400 text-white"
+                      placeholder="New York"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="state" className="text-gray-300">
+                      State
+                    </Label>
+                    <Input
+                      id="state"
+                      name="state"
+                      value={formData.state}
+                      onChange={handleInputChange}
+                      className="bg-gray-800 border-gray-600 focus:border-cyan-400 text-white"
+                      placeholder="NY"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="postalCode" className="text-gray-300">
+                      Postal Code
+                    </Label>
+                    <Input
+                      id="postalCode"
+                      name="postalCode"
+                      value={formData.postalCode}
+                      onChange={handleInputChange}
+                      className="bg-gray-800 border-gray-600 focus:border-cyan-400 text-white"
+                      placeholder="10001"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="country" className="text-gray-300">
+                    Country
+                  </Label>
+                  <Input
+                    id="country"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleInputChange}
+                    className="bg-gray-800 border-gray-600 focus:border-cyan-400 text-white"
+                    placeholder="United States"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Order Summary & Payment */}
+            <Card className="bg-gray-900/50 border-gray-700 hover:border-cyan-500/50 transition-colors">
+              <CardHeader>
+                <CardTitle className="text-xl text-cyan-400">Order Summary</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4 mb-6">
+                  {items.map((item, index) => (
+                    <div
+                      key={`${item.id}-${item.size}-${item.color}-${index}`}
+                      className="flex justify-between items-start"
+                    >
+                      <div className="flex-1">
+                        <p className="font-medium text-white">{item.name}</p>
+                        <p className="text-sm text-gray-400">
+                          {item.size}, {item.color} × {item.quantity}
+                        </p>
+                      </div>
+                      <span className="text-cyan-400 font-medium">{(item.price * item.quantity).toFixed(3)} SOL</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="border-t border-gray-700 pt-4 mb-6">
+                  <div className="flex justify-between text-lg font-bold">
+                    <span className="text-white">Total:</span>
+                    <span className="text-cyan-400">{total.toFixed(3)} SOL</span>
+                  </div>
+                </div>
+
+                {/* Payment Method Selection */}
+                <div className="mb-6">
+                  <Label className="text-cyan-400 mb-3 block">Payment Method</Label>
+                  <div className="grid grid-cols-1 gap-3">
+                    <button
+                      onClick={() => setPaymentMethod("demo")}
+                      className={`p-4 rounded-lg border transition-all flex items-center space-x-3 ${
+                        paymentMethod === "demo"
+                          ? "border-cyan-400 bg-cyan-400/10"
+                          : "border-gray-600 hover:border-gray-500"
+                      }`}
+                    >
+                      <CreditCard className="h-5 w-5 text-cyan-400" />
+                      <div className="text-left">
+                        <p className="font-medium text-white">Demo Payment</p>
+                        <p className="text-sm text-gray-400">For testing purposes</p>
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => setPaymentMethod("sol")}
+                      className={`p-4 rounded-lg border transition-all flex items-center space-x-3 ${
+                        paymentMethod === "sol"
+                          ? "border-cyan-400 bg-cyan-400/10"
+                          : "border-gray-600 hover:border-gray-500"
+                      }`}
+                    >
+                      <Wallet className="h-5 w-5 text-cyan-400" />
+                      <div className="text-left">
+                        <p className="font-medium text-white">Pay with SOL</p>
+                        <p className="text-sm text-gray-400">
+                          {connected ? `Connected: ${publicKey?.toString().slice(0, 8)}...` : "Connect wallet required"}
+                        </p>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={handlePayment}
+                  disabled={loading || (paymentMethod === "sol" && !connected)}
+                  className="w-full bg-cyan-500 hover:bg-cyan-400 text-black text-lg py-6 font-bold transition-all duration-200"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Processing...
+                    </>
+                  ) : paymentMethod === "sol" ? (
+                    connected ? (
+                      "Pay with SOL"
+                    ) : (
+                      "Connect Wallet First"
+                    )
+                  ) : (
+                    "Complete Demo Order"
+                  )}
+                </Button>
+
+                <p className="text-sm text-gray-400 mt-4 text-center">
+                  {paymentMethod === "sol"
+                    ? "Secure payment powered by Solana blockchain"
+                    : "Demo mode - no actual payment required"}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+  )
+}
