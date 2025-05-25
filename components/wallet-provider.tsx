@@ -7,7 +7,7 @@ import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom"
 import { SolflareWalletAdapter } from "@solana/wallet-adapter-solflare"
 import { GlowWalletAdapter } from "@solana/wallet-adapter-glow"
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui"
-import { WalletConnectConnector } from '@walletconnect/web3-provider';
+import  WalletConnectConnector  from '@walletconnect/web3-provider';
 
 // Import wallet adapter CSS
 require("@solana/wallet-adapter-react-ui/styles.css")
