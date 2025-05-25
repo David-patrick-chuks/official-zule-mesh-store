@@ -13,7 +13,7 @@ require("@solana/wallet-adapter-react-ui/styles.css")
 
 export function WalletContextProvider({ children }: { children: React.ReactNode }) {
   // Use a public RPC endpoint that doesn't require authentication
-  const endpoint = useMemo(() =>  'https://api.mainnet-beta.solana.com', [])
+  const endpoint = useMemo(() =>  'https://mainnet.helius-rpc.com/?api-key=c19acd73-954e-4a71-86f9-0fe7d465004a', [])
   
   
 
