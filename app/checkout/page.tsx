@@ -23,7 +23,7 @@ export default function CheckoutPage() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<"sol" | "demo">("demo");
+  const [paymentMethod, setPaymentMethod] = useState<"sol" | "demo">("sol");
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
