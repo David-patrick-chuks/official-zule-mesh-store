@@ -127,12 +127,13 @@ export default function CheckoutPage() {
         description: `Transaction confirmed: ${signature}`,
       });
       router.push(`/payment-success?orderId=${orderId}&txHash=${signature}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error("SOL Payment error:", error);
       toast({
         title: "SOL Payment Failed",
-        description:
-          "There was an error processing your SOL payment. Please try demo payment instead.",
+        description: error?.message?.includes("Insufficient SOL")
+          ? "You don't have enough SOL in your wallet."
+          : "There was an error processing your SOL payment. Please try demo payment instead.",
         variant: "destructive",
       });
     } finally {
