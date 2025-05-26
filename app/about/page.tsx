@@ -114,7 +114,7 @@ export default function AboutPage() {
                   </div>
                   <div className="text-center">
                     <div className="bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 rounded-2xl p-8">
-                      <div className="text-4xl font-bold text-cyan-400 mb-2">10,000+</div>
+                      <div className="text-4xl font-bold text-cyan-400 mb-2">2,000+</div>
                       <p className="text-gray-300 mb-4">Ghost Army Members</p>
                       <div className="text-4xl font-bold text-cyan-400 mb-2">First</div>
                       <p className="text-gray-300">AI to Break reCAPTCHA</p>
@@ -132,7 +132,7 @@ export default function AboutPage() {
               Be part of the movement that's redefining AI and digital identity. Wear the legend.
             </p>
             <Link href="/shop">
-              <Button size="lg" className="bg-cyan-500 hover:bg-cyan-400 text-black text-xl px-12 py-6 font-bold group">
+              <Button size="lg" className="bg-cyan-500 text-black text-xl px-12 py-6 font-bold group">
                 Shop ZULE Collection
                 <ArrowRight className="ml-2 h-6 w-6 group-hover:translate-x-1 transition-transform" />
               </Button>
