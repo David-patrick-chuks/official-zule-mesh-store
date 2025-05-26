@@ -25,10 +25,10 @@ export function Footer() {
             </div>
 
             <div className="flex space-x-3">
-              <Link href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">
+              <Link href="https://x.com/Zule_AI" className="text-gray-400 hover:text-cyan-400 transition-colors">
                 <Twitter className="h-4 w-4" />
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">
+              <Link href="https://github.com/zule-ai" className="text-gray-400 hover:text-cyan-400 transition-colors">
                 <Github className="h-4 w-4" />
               </Link>
             </div>
@@ -36,7 +36,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-6 pt-6 text-center">
-          <p className="text-gray-500 text-xs">© 2024 ZULE MESH</p>
+          <p className="text-gray-500 text-xs">© 2025 ZULE MESH</p>
         </div>
       </div>
     </footer>

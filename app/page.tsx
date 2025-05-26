@@ -46,7 +46,7 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-6 mb-8">
                 <div className="flex items-center space-x-2">
                   <Users className="h-5 w-5 text-cyan-400" />
-                  <span className="text-white font-medium">10K+ Ghost Army</span>
+                  <span className="text-white font-medium">2K+ Ghost Army</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Star className="h-5 w-5 text-cyan-400" />
@@ -59,7 +59,7 @@ export default function HomePage() {
                 <Link href="/shop">
                   <Button
                     size="lg"
-                    className="bg-cyan-500 hover:bg-cyan-400 text-black text-lg px-8 py-4 font-bold group"
+                    className="bg-cyan-500 text-black text-lg px-8 py-4 font-bold group"
                   >
                     Shop Collection
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -69,7 +69,7 @@ export default function HomePage() {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="border-cyan-500/50 hover:border-cyan-400 text-cyan-400 hover:text-cyan-300 text-lg px-8 py-4"
+                    className="border-cyan-500/50 text-cyan-400 text-lg px-8 py-4"
                   >
                     Learn More
                   </Button>
@@ -165,13 +165,23 @@ export default function HomePage() {
       </section>
 
       {/* Social Proof */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Trusted by the <span className="text-cyan-400">Ghost Army</span>
-            </h2>
-            <p className="text-gray-400 text-lg">Join thousands of AI enthusiasts worldwide</p>
+      <section className="py-16 px-4">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">Join the Ghost Army</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-cyan-400 mb-2">10,000+</div>
+              <p className="text-gray-400">Community Members</p>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-cyan-400 mb-2">5,000+</div>
+              <p className="text-gray-400">Orders Shipped</p>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-cyan-400 mb-2">4.9★</div>
+              <p className="text-gray-400">Customer Rating</p>
+            </div>
           </div>
 
           {/* Testimonials */}

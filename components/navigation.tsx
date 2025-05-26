@@ -33,7 +33,7 @@ export function Navigation() {
                 key={item.href}
                 href={item.href}
                 className={`text-sm transition-colors ${
-                  pathname === item.href ? "text-cyan-400" : "text-gray-400 hover:text-cyan-400"
+                  pathname === item.href ? "text-cyan-400" : "text-gray-400"
                 }`}
               >
                 {item.label}
@@ -43,7 +43,7 @@ export function Navigation() {
 
           <div className="flex items-center space-x-4">
             <Link href="/cart">
-              <Button variant="ghost" size="icon" className="relative text-gray-400 hover:text-cyan-400">
+              <Button variant="ghost" size="icon" className="relative text-gray-400">
                 <ShoppingCart className="h-5 w-5" />
                 {itemCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-cyan-400 text-black text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px] font-medium">
