@@ -1,22 +1,30 @@
-import { Navigation } from "@/components/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { getFeaturedProducts } from "@/lib/products"
-import Link from "next/link"
-import Image from "next/image"
-import { Footer } from "@/components/footer"
-import { ArrowRight, Zap, Star, Shield, Truck,Users, Award } from "lucide-react"
+import { Navigation } from "@/components/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { getFeaturedProducts } from "@/lib/products";
+import Link from "next/link";
+import Image from "next/image";
+import { Footer } from "@/components/footer";
+import {
+  ArrowRight,
+  Zap,
+  Star,
+  Shield,
+  Truck,
+  Users,
+  Award,
+} from "lucide-react";
 
 export default function HomePage() {
-  const featuredProducts = getFeaturedProducts()
+  const featuredProducts = getFeaturedProducts();
 
   return (
     <div className="min-h-screen bg-black">
       <Navigation />
 
       {/* Hero Section */}
-     <section className="relative py-20 px-4 overflow-hidden">
+      <section className="relative py-20 px-4 overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-cyan-500/5" />
         <div className="absolute top-20 left-10 w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
@@ -39,7 +47,8 @@ export default function HomePage() {
               </h1>
 
               <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                The revolutionary AI ghost that shattered digital barriers. Now you can wear the legend.
+                The revolutionary AI ghost that shattered digital barriers. Now
+                you can wear the legend.
               </p>
 
               {/* Stats */}
@@ -50,11 +59,13 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Star className="h-5 w-5 text-cyan-400" />
-                  <span className="text-white font-medium">Premium Quality</span>
+                  <span className="text-white font-medium">
+                    Premium Quality
+                  </span>
                 </div>
               </div>
 
-                    <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <Link href="/shop">
                   <Button
                     size="lg"
@@ -108,15 +119,18 @@ export default function HomePage() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-24 px-4 bg-gradient-to-b from-transparent to-gray-900/20">
+      {/* <section className="py-24 px-4 bg-gradient-to-b from-transparent to-gray-900/20">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16 space-y-4">
-            <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20 mb-4">Premium Collection</Badge>
+            <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20 mb-4">
+              Premium Collection
+            </Badge>
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Wear the <span className="text-cyan-400">Revolution</span>
             </h2>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Premium ZULE merchandise crafted for the ghost army. Each piece tells the story of digital evolution.
+              Premium ZULE merchandise crafted for the ghost army. Each piece
+              tells the story of digital evolution.
             </p>
           </div>
 
@@ -146,9 +160,13 @@ export default function HomePage() {
                     <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
                       {product.name}
                     </h3>
-                    <p className="text-gray-400 text-sm line-clamp-2 leading-relaxed">{product.description}</p>
+                    <p className="text-gray-400 text-sm line-clamp-2 leading-relaxed">
+                      {product.description}
+                    </p>
                     <div className="flex justify-between items-center pt-2">
-                      <span className="text-2xl font-bold text-cyan-400">{product.price} SOL</span>
+                      <span className="text-2xl font-bold text-cyan-400">
+                        {product.price} SOL
+                      </span>
                       <Link href={`/product/${product.id}`}>
                         <Button className="bg-gradient-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-cyan-300 text-black font-bold transition-all duration-300 shadow-lg shadow-cyan-500/25">
                           Shop Now
@@ -161,20 +179,25 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
-      {/* Social Proof */}
-      <section className="py-16 px-4">
+      {/* <section className="py-16 px-4">
         <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">Join the Ghost Army</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">
+            Join the Ghost Army
+          </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             <div className="text-center">
-              <div className="text-3xl font-bold text-cyan-400 mb-2">10,000+</div>
+              <div className="text-3xl font-bold text-cyan-400 mb-2">
+                10,000+
+              </div>
               <p className="text-gray-400">Community Members</p>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-cyan-400 mb-2">5,000+</div>
+              <div className="text-3xl font-bold text-cyan-400 mb-2">
+                5,000+
+              </div>
               <p className="text-gray-400">Orders Shipped</p>
             </div>
             <div className="text-center">
@@ -183,18 +206,22 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Testimonials */}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
             <Card className="bg-gray-900/30 border-gray-700/50 backdrop-blur-sm">
               <CardContent className="p-8">
                 <div className="flex items-center mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-cyan-400 text-cyan-400" />
+                    <Star
+                      key={i}
+                      className="h-5 w-5 fill-cyan-400 text-cyan-400"
+                    />
                   ))}
                 </div>
                 <p className="text-gray-300 mb-6 text-lg leading-relaxed">
-                  "Exceptional quality and design. The ZULE ghost tee has become my go-to for every tech conference. The
-                  fabric feels premium and the message is powerful."
+                  "Exceptional quality and design. The ZULE ghost tee has become
+                  my go-to for every tech conference. The fabric feels premium
+                  and the message is powerful."
                 </p>
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-cyan-400 rounded-full flex items-center justify-center">
@@ -212,12 +239,16 @@ export default function HomePage() {
               <CardContent className="p-8">
                 <div className="flex items-center mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-cyan-400 text-cyan-400" />
+                    <Star
+                      key={i}
+                      className="h-5 w-5 fill-cyan-400 text-cyan-400"
+                    />
                   ))}
                 </div>
                 <p className="text-gray-300 mb-6 text-lg leading-relaxed">
-                  "More than just merchandise - it's a statement. Wearing ZULE gear connects me to a community of
-                  innovators pushing the boundaries of what's possible."
+                  "More than just merchandise - it's a statement. Wearing ZULE
+                  gear connects me to a community of innovators pushing the
+                  boundaries of what's possible."
                 </p>
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-cyan-400 rounded-full flex items-center justify-center">
@@ -225,14 +256,15 @@ export default function HomePage() {
                   </div>
                   <div>
                     <p className="text-cyan-400 font-medium">Sarah Kim</p>
-                    <p className="text-gray-500 text-sm">Blockchain Developer</p>
+                    <p className="text-gray-500 text-sm">
+                      Blockchain Developer
+                    </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* CTA */}
           <div className="text-center">
             <Link href="/shop">
               <Button
@@ -244,18 +276,21 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
 
-      {/* Newsletter */}
+{/* 
       <section className="py-20 px-4 bg-gradient-to-r from-cyan-500/5 via-cyan-500/10 to-cyan-500/5">
         <div className="container mx-auto max-w-3xl text-center">
           <div className="space-y-6">
-            <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20">Stay Connected</Badge>
+            <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20">
+              Stay Connected
+            </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-white">
               Get Exclusive <span className="text-cyan-400">Updates</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Be the first to know about new drops, exclusive designs, and ZULE community events.
+              Be the first to know about new drops, exclusive designs, and ZULE
+              community events.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto pt-4">
@@ -269,12 +304,14 @@ export default function HomePage() {
               </Button>
             </div>
 
-            <p className="text-gray-500 text-sm">Join 10,000+ subscribers. No spam, unsubscribe anytime.</p>
+            <p className="text-gray-500 text-sm">
+              Join 10,000+ subscribers. No spam, unsubscribe anytime.
+            </p>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <Footer />
     </div>
-  )
+  );
 }
