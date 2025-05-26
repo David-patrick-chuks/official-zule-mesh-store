@@ -17,31 +17,39 @@ export const useSolanaPayment = () => {
     const storePublicKey = new web3.PublicKey(STORE_WALLET);
 
     const balance = await connection.getBalance(publicKey);
-    // if (balance < lamports) {
-    //   throw new Error("Insufficient SOL balance to complete transaction.");
-    // }
+//    if (balance < lamports) {
+//     throw new Error("Insufficient SOL balance to complete transaction.");
+//   }
 
-    const transaction = new web3.Transaction().add(
-      web3.SystemProgram.transfer({
-        fromPubkey: publicKey,
-        toPubkey: storePublicKey,
-        lamports,
-      })
-    );
+  const transaction = new web3.Transaction().add(
+    web3.SystemProgram.transfer({
+      fromPubkey: publicKey,
+      toPubkey: storePublicKey,
+      lamports,
+    })
+  );
 
-    // Use signAndSendTransaction instead of sendTransaction
-    const { signature } = await wallet.adapter.signAndSendTransaction(transaction);
+  // Try using signAndSendTransaction if available
+  let signature: string;
+  if ("signAndSendTransaction" in wallet.adapter) {
+    const result = await (wallet.adapter as any).signAndSendTransaction(transaction);
+    signature = result.signature;
+  } else {
+    // fallback to original sendTransaction flow
+    signature = await wallet.adapter.sendTransaction(transaction, connection);
+  }
 
-    // Confirm and verify the transaction
-    await connection.confirmTransaction(signature, "finalized");
+  await connection.confirmTransaction(signature, "finalized");
 
-    const result = await connection.getParsedTransaction(signature, { commitment: "finalized" });
+  const result = await connection.getParsedTransaction(signature, {
+    commitment: "finalized",
+  });
 
-    if (!result || result.meta?.err) {
-      throw new Error("Transaction failed: " + JSON.stringify(result?.meta?.err));
-    }
+  if (!result || result.meta?.err) {
+    throw new Error("Transaction failed: " + JSON.stringify(result?.meta?.err));
+  }
 
-    return signature;
+  return signature;
   };
 
   return { sendSolPayment };
