@@ -34,6 +34,17 @@ export default function CheckoutPage() {
     country: "",
   });
 
+  const saveOrderToLocalStorage = (txHash: string, orderData: any) => {
+  const key = `zule-order-${txHash}`;
+  try {
+    localStorage.setItem(key, JSON.stringify(orderData));
+    console.log("Order saved to localStorage:", key);
+  } catch (err) {
+    console.error("Failed to save order to localStorage:", err);
+  }
+};
+
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
       ...prev,
@@ -64,82 +75,117 @@ export default function CheckoutPage() {
     return true;
   };
 
-  const handleDemoPayment = async () => {
-    if (!validateForm()) return;
+const handleDemoPayment = async () => {
+  if (!validateForm()) return;
 
-    setLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+  setLoading(true);
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const orderId = "ZULE" + Date.now().toString(36).toUpperCase();
+    const mockTxHash = "DEMO" + Math.random().toString(36).substring(2, 15).toUpperCase();
 
-      const orderId = "ZULE" + Date.now().toString(36).toUpperCase();
-      const mockTxHash =
-        "DEMO" + Math.random().toString(36).substring(2, 15).toUpperCase();
+    const orderData = {
+      orderId,
+      orderDate: new Date().toLocaleDateString(),
+      orderTime: new Date().toLocaleTimeString(),
+      trackingNumber: orderId,
+      customerEmail: formData.email,
+      estimatedDelivery: "Within 5-7 business days",
+      shippingAddress: {
+        name: formData.fullName,
+        street: formData.address,
+        city: formData.city,
+        state: formData.state,
+        zip: formData.postalCode,
+        country: formData.country,
+      },
+      items,
+      subtotal: total,
+      total,
+    };
 
-      clearCart();
+    saveOrderToLocalStorage(mockTxHash, orderData);
+    clearCart();
 
-      toast({
-        title: "Demo Payment Successful!",
-        description: `Order ${orderId} has been placed successfully.`,
-      });
+    toast({
+      title: "Demo Payment Successful!",
+      description: `Order ${orderId} has been placed successfully.`,
+    });
 
-      router.push(`/payment-success?orderId=${orderId}&txHash=${mockTxHash}`);
-    } catch (error) {
-      toast({
-        title: "Payment Failed",
-        description:
-          "There was an error processing your payment. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    router.push(`/payment-success?orderId=${orderId}&txHash=${mockTxHash}`);
+  } catch (error) {
+    toast({
+      title: "Payment Failed",
+      description: "There was an error processing your payment. Please try again.",
+      variant: "destructive",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
-  const handleSolPayment = async () => {
-    if (!connected || !publicKey) {
-      toast({
-        title: "Wallet Not Connected",
-        description: "Please connect your wallet to pay with SOL.",
-        variant: "destructive",
-      });
-      return;
-    }
 
-    if (!validateForm()) return;
+const handleSolPayment = async () => {
+  if (!connected || !publicKey) {
+    toast({
+      title: "Wallet Not Connected",
+      description: "Please connect your wallet to pay with SOL.",
+      variant: "destructive",
+    });
+    return;
+  }
 
-    setLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      const signature = await sendSolPayment(total);
-      const orderId = "ZULE" + Date.now().toString(36).toUpperCase();
+  if (!validateForm()) return;
 
-      // const mockTxHash = "SOL" + Math.random().toString(36).substring(2, 15).toUpperCase()
+  setLoading(true);
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    const signature = await sendSolPayment(total);
+    const orderId = "ZULE" + Date.now().toString(36).toUpperCase();
 
-      clearCart();
+    const orderData = {
+      orderId,
+      orderDate: new Date().toLocaleDateString(),
+      orderTime: new Date().toLocaleTimeString(),
+      trackingNumber: orderId,
+      customerEmail: formData.email,
+      estimatedDelivery: "Within 5-7 business days",
+      shippingAddress: {
+        name: formData.fullName,
+        street: formData.address,
+        city: formData.city,
+        state: formData.state,
+        zip: formData.postalCode,
+        country: formData.country,
+      },
+      items,
+      subtotal: total,
+      total,
+    };
 
-      // toast({
-      //   title: "SOL Payment Successful!",
-      //   description: `Order ${orderId} has been placed successfully.`,
-      // })
+    saveOrderToLocalStorage(signature, orderData);
+    clearCart();
 
-      toast({
-        title: "Payment Successful!",
-        description: `Transaction confirmed: ${signature}`,
-      });
-      router.push(`/payment-success?orderId=${orderId}&txHash=${signature}`);
-    } catch (error: any) {
-      console.error("SOL Payment error:", error);
-      toast({
-        title: "SOL Payment Failed",
-        description: error?.message?.includes("Insufficient SOL")
-          ? "You don't have enough SOL in your wallet."
-          : "There was an error processing your SOL payment. Please try demo payment instead.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    toast({
+      title: "Payment Successful!",
+      description: `Transaction confirmed: ${signature}`,
+    });
+
+    router.push(`/payment-success?orderId=${orderId}&txHash=${signature}`);
+  } catch (error: any) {
+    console.error("SOL Payment error:", error);
+    toast({
+      title: "SOL Payment Failed",
+      description: error?.message?.includes("Insufficient SOL")
+        ? "You don't have enough SOL in your wallet."
+        : "There was an error processing your SOL payment. Please try demo payment instead.",
+      variant: "destructive",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handlePayment = () => {
     if (paymentMethod === "sol") {
