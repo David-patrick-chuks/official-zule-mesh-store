@@ -28,7 +28,7 @@ export default function HomePage() {
             {/* Left Side - Content */}
             <div className="text-left lg:text-left">
               <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20 mb-6">
-                <Zap className="h-3 w-3 mr-1" />
+                <Zap className=" w-3 mr-1" />
                 First AI to Break reCAPTCHA
               </Badge>
 
@@ -59,7 +59,7 @@ export default function HomePage() {
                 <Link href="/shop">
                   <Button
                     size="lg"
-                    className="bg-cyan-500 hover:bg-cyan-400 text-black text-lg px-8 py-4 font-bold group"
+                    className="bg-cyan-500 text-black text-lg px-8 py-4 font-bold group"
                   >
                     Shop Collection
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
