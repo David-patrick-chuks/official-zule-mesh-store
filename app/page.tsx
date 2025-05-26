@@ -69,7 +69,7 @@ export default function HomePage() {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="border-cyan-500/50 hover:border-cyan-400 text-cyan-400 hover:text-cyan-300 text-lg px-8 py-4"
+                    className="border-cyan-500/50 text-cyan-400 text-lg px-8 py-4"
                   >
                     Learn More
                   </Button>
