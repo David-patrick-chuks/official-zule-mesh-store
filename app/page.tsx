@@ -54,14 +54,13 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <Link href="/shop">
                   <Button
                     size="lg"
-                    className="bg-cyan-500 text-black text-lg px-8 py-4 font-bold group"
+                    className="bg-gradient-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-cyan-300 text-black text-lg px-8 py-6 font-bold group shadow-lg shadow-cyan-500/25 hover:shadow-cyan-400/30 transition-all duration-300"
                   >
-                    Shop Collection
+                    Explore Collection
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
@@ -69,9 +68,9 @@ export default function HomePage() {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="border-cyan-500/50 text-cyan-400 text-lg px-8 py-4"
+                    className="border-cyan-500/30 hover:border-cyan-400/50 text-cyan-400 hover:text-cyan-300 text-lg px-8 py-6 bg-cyan-500/5 hover:bg-cyan-500/10 transition-all duration-300"
                   >
-                    Learn More
+                    Learn Our Story
                   </Button>
                 </Link>
               </div>
