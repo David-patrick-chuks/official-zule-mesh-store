@@ -34,7 +34,7 @@ export function Navigation() {
                 key={item.href}
                 href={item.href}
                 className={`text-sm transition-colors ${
-                  pathname === item.href ? "text-cyan-400" : "text-gray-400 hover:text-cyan-400"
+                  pathname === item.href ? "text-cyan-400" : "text-gray-400"
                 }`}
               >
                 {item.label}
