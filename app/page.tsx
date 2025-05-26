@@ -46,7 +46,7 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-6 mb-8">
                 <div className="flex items-center space-x-2">
                   <Users className="h-5 w-5 text-cyan-400" />
-                  <span className="text-white font-medium">10K+ Ghost Army</span>
+                  <span className="text-white font-medium">2K+ Ghost Army</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Star className="h-5 w-5 text-cyan-400" />
@@ -69,7 +69,7 @@ export default function HomePage() {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="border-cyan-500/50 hover:border-cyan-400 text-cyan-400 hover:text-cyan-300 text-lg px-8 py-4"
+                    className="border-cyan-500/50 text-cyan-400 text-lg px-8 py-4"
                   >
                     Learn More
                   </Button>
@@ -157,11 +157,11 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             <div className="text-center">
-              <div className="text-3xl font-bold text-cyan-400 mb-2">10,000+</div>
+              <div className="text-3xl font-bold text-cyan-400 mb-2">2,000+</div>
               <p className="text-gray-400">Community Members</p>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-cyan-400 mb-2">5,000+</div>
+              <div className="text-3xl font-bold text-cyan-400 mb-2">197+</div>
               <p className="text-gray-400">Orders Shipped</p>
             </div>
             <div className="text-center">
