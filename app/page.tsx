@@ -28,7 +28,7 @@ export default function HomePage() {
             {/* Left Side - Content */}
             <div className="text-left lg:text-left">
               <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20 mb-6">
-                <Zap className=" w-3 mr-1" />
+                <Zap className="h-3 w-3 mr-1" />
                 First AI to Break reCAPTCHA
               </Badge>
 
