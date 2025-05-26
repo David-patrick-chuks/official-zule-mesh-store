@@ -39,7 +39,7 @@ export default function ProductPage({ params }: ProductPageProps) {
     if (!selectedSize || !selectedColor) {
       toast({
         title: "Selection Required",
-        description: "Please select size and color",
+        description: "Please select both size and color options before adding to cart.",
         variant: "destructive",
       })
       return
@@ -57,8 +57,8 @@ export default function ProductPage({ params }: ProductPageProps) {
     }
 
     toast({
-      title: "Added to Cart",
-      description: `${quantity}x ${product.name} added to your ghost army collection`,
+      title: "Added to Cart Successfully",
+      description: `${quantity}x ${product.name} (${selectedSize}, ${selectedColor}) has been added to your cart.`,
     })
   }
 
@@ -211,13 +211,6 @@ export default function ProductPage({ params }: ProductPageProps) {
                 >
                   Add to Ghost Army
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full border-cyan-500/50 hover:border-cyan-400 text-cyan-400 hover:text-cyan-300 text-lg py-6 transition-all duration-200"
-                  size="lg"
-                >
-                  Buy Now with SOL
                 </Button>
               </div>
 

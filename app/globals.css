@@ -68,3 +68,28 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
+
+/* Fix hover visibility issues */
+.hover\:text-cyan-400:hover {
+  color: rgb(34 211 238) !important;
+}
+
+.hover\:text-cyan-300:hover {
+  color: rgb(103 232 249) !important;
+}
+
+.hover\:border-cyan-400:hover {
+  border-color: rgb(34 211 238) !important;
+}
+
+.hover\:border-cyan-500\/50:hover {
+  border-color: rgb(6 182 212 / 0.5) !important;
+}
+
+.hover\:text-white:hover {
+  color: rgb(255 255 255) !important;
+}
+
+.hover\:border-gray-500:hover {
+  border-color: rgb(107 114 128) !important;
+}

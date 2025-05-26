@@ -4,7 +4,6 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { WalletButton } from "@/components/wallet-button"
 import { useCart } from "@/components/cart-provider"
 
 export function Navigation() {
@@ -43,7 +42,6 @@ export function Navigation() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <WalletButton />
             <Link href="/cart">
               <Button variant="ghost" size="icon" className="relative text-gray-400 hover:text-cyan-400">
                 <ShoppingCart className="h-5 w-5" />

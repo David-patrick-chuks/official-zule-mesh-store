@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, type ReactNode } from "react"
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 
 interface CartItem {
   id: string
@@ -25,6 +25,28 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    const savedCart = localStorage.getItem("zule-cart")
+    if (savedCart) {
+      try {
+        const parsedCart = JSON.parse(savedCart)
+        setItems(parsedCart)
+      } catch (error) {
+        console.error("Error loading cart from localStorage:", error)
+      }
+    }
+    setIsLoaded(true)
+  }, [])
+
+  // Save cart to localStorage whenever items change
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem("zule-cart", JSON.stringify(items))
+    }
+  }, [items, isLoaded])
 
   const addItem = (newItem: Omit<CartItem, "quantity">) => {
     setItems((prev) => {

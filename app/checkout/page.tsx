@@ -1,29 +1,25 @@
-"use client";
+"use client"
 
-import type React from "react";
-import { useState } from "react";
-import { Navigation } from "@/components/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useCart } from "@/components/cart-provider";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
-import { Footer } from "@/components/footer";
-import { Loader2, CreditCard, Wallet } from "lucide-react";
-import { useSolanaPayment } from "@/hooks/use-solana-payment";
+import type React from "react"
+import { useState } from "react"
+import { Navigation } from "@/components/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { useCart } from "@/components/cart-provider"
+import { useToast } from "@/hooks/use-toast"
+import { useRouter } from "next/navigation"
+import { Footer } from "@/components/footer"
+import { QRPayment } from "@/components/qr-payment"
+import { Smartphone, ArrowRight } from "lucide-react"
 
 export default function CheckoutPage() {
-  const { sendSolPayment } = useSolanaPayment();
-  const { items, total, clearCart } = useCart();
-  const { connected, publicKey, wallet } = useWallet();
-  const { toast } = useToast();
-  const router = useRouter();
+  const { items, total, clearCart } = useCart()
+  const { toast } = useToast()
+  const router = useRouter()
 
-  const [loading, setLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<"sol" | "demo">("sol");
+  const [showQRPayment, setShowQRPayment] = useState(false)
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -32,25 +28,14 @@ export default function CheckoutPage() {
     state: "",
     postalCode: "",
     country: "",
-  });
-
-  const saveOrderToLocalStorage = (txHash: string, orderData: any) => {
-  const key = `zule-order-${txHash}`;
-  try {
-    localStorage.setItem(key, JSON.stringify(orderData));
-    console.log("Order saved to localStorage:", key);
-  } catch (err) {
-    console.error("Failed to save order to localStorage:", err);
-  }
-};
-
+  })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
-    }));
-  };
+    }))
+  }
 
   const validateForm = () => {
     if (!formData.fullName || !formData.email || !formData.address) {
@@ -58,147 +43,68 @@ export default function CheckoutPage() {
         title: "Missing Information",
         description: "Please fill in all required fields.",
         variant: "destructive",
-      });
-      return false;
+      })
+      return false
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.email)) {
       toast({
         title: "Invalid Email",
         description: "Please enter a valid email address.",
         variant: "destructive",
-      });
-      return false;
+      })
+      return false
     }
 
-    return true;
-  };
+    return true
+  }
 
-const handleDemoPayment = async () => {
-  if (!validateForm()) return;
+  const handleSolPayment = () => {
+    if (!validateForm()) return
+    setShowQRPayment(true)
+  }
 
-  setLoading(true);
-  try {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    const orderId = "ZULE" + Date.now().toString(36).toUpperCase();
-    const mockTxHash = "DEMO" + Math.random().toString(36).substring(2, 15).toUpperCase();
+  const handleQRPaymentSuccess = (reference: string) => {
+    const orderId = "ZULE" + Date.now().toString(36).toUpperCase()
 
-    const orderData = {
-      orderId,
-      orderDate: new Date().toLocaleDateString(),
-      orderTime: new Date().toLocaleTimeString(),
-      trackingNumber: orderId,
-      customerEmail: formData.email,
-      estimatedDelivery: "Within 5-7 business days",
-      shippingAddress: {
-        name: formData.fullName,
-        street: formData.address,
-        city: formData.city,
-        state: formData.state,
-        zip: formData.postalCode,
-        country: formData.country,
-      },
-      items,
-      subtotal: total,
-      total,
-    };
-
-    saveOrderToLocalStorage(mockTxHash, orderData);
-    clearCart();
+    clearCart()
 
     toast({
-      title: "Demo Payment Successful!",
+      title: "SOL Payment Successful!",
       description: `Order ${orderId} has been placed successfully.`,
-    });
+    })
 
-    router.push(`/payment-success?orderId=${orderId}&txHash=${mockTxHash}`);
-  } catch (error) {
-    toast({
-      title: "Payment Failed",
-      description: "There was an error processing your payment. Please try again.",
-      variant: "destructive",
-    });
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-const handleSolPayment = async () => {
-  if (!connected || !publicKey) {
-    toast({
-      title: "Wallet Not Connected",
-      description: "Please connect your wallet to pay with SOL.",
-      variant: "destructive",
-    });
-    return;
+    router.push(`/payment-success?orderId=${orderId}&txHash=${reference}`)
   }
 
-  if (!validateForm()) return;
-
-  setLoading(true);
-  try {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    const signature = await sendSolPayment(total);
-    const orderId = "ZULE" + Date.now().toString(36).toUpperCase();
-
-    const orderData = {
-      orderId,
-      orderDate: new Date().toLocaleDateString(),
-      orderTime: new Date().toLocaleTimeString(),
-      trackingNumber: orderId,
-      customerEmail: formData.email,
-      estimatedDelivery: "Within 5-7 business days",
-      shippingAddress: {
-        name: formData.fullName,
-        street: formData.address,
-        city: formData.city,
-        state: formData.state,
-        zip: formData.postalCode,
-        country: formData.country,
-      },
-      items,
-      subtotal: total,
-      total,
-    };
-
-    saveOrderToLocalStorage(signature, orderData);
-    clearCart();
-
-    toast({
-      title: "Payment Successful!",
-      description: `Transaction confirmed: ${signature}`,
-    });
-
-    router.push(`/payment-success?orderId=${orderId}&txHash=${signature}`);
-  } catch (error: any) {
-    console.error("SOL Payment error:", error);
-    toast({
-      title: "SOL Payment Failed",
-      description: error?.message?.includes("Insufficient SOL")
-        ? "You don't have enough SOL in your wallet."
-        : "There was an error processing your SOL payment. Please try demo payment instead.",
-      variant: "destructive",
-    });
-  } finally {
-    setLoading(false);
+  const handleQRPaymentCancel = () => {
+    setShowQRPayment(false)
   }
-};
 
+  if (items.length === 0) {
+    router.push("/cart")
+    return null
+  }
 
-  const handlePayment = () => {
-    if (paymentMethod === "sol") {
-      handleSolPayment();
-    } else {
-      handleDemoPayment();
-    }
-  };
-
-  // if (items.length === 0) {
-  //   router.push("/cart")
-  //   return null
-  // }
+  if (showQRPayment) {
+    return (
+      <div className="min-h-screen bg-black flex flex-col">
+        <Navigation />
+        <div className="container mx-auto px-4 py-8 flex-1">
+          <div className="max-w-3xl mx-auto">
+            <h1 className="text-3xl md:text-4xl font-bold mb-8 text-cyan-400 text-center">Complete Payment</h1>
+            <QRPayment
+              total={total}
+              onPaymentSuccess={handleQRPaymentSuccess}
+              onPaymentCancel={handleQRPaymentCancel}
+            />
+          </div>
+        </div>
+        <Footer />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-black flex flex-col">
@@ -206,17 +112,13 @@ const handleSolPayment = async () => {
 
       <div className="container mx-auto px-4 py-8 flex-1">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-cyan-400 text-center">
-            Secure Checkout
-          </h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-cyan-400 text-center">Secure Checkout</h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Shipping Information */}
             <Card className="bg-gray-900/50 border-gray-700 hover:border-cyan-500/50 transition-colors">
               <CardHeader>
-                <CardTitle className="text-xl text-cyan-400">
-                  Shipping Information
-                </CardTitle>
+                <CardTitle className="text-xl text-cyan-400">Shipping Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -327,9 +229,7 @@ const handleSolPayment = async () => {
             {/* Order Summary & Payment */}
             <Card className="bg-gray-900/50 border-gray-700 hover:border-cyan-500/50 transition-colors">
               <CardHeader>
-                <CardTitle className="text-xl text-cyan-400">
-                  Order Summary
-                </CardTitle>
+                <CardTitle className="text-xl text-cyan-400">Order Summary</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4 mb-6">
@@ -344,9 +244,7 @@ const handleSolPayment = async () => {
                           {item.size}, {item.color} × {item.quantity}
                         </p>
                       </div>
-                      <span className="text-cyan-400 font-medium">
-                        {(item.price * item.quantity).toFixed(3)} SOL
-                      </span>
+                      <span className="text-cyan-400 font-medium">{(item.price * item.quantity).toFixed(3)} SOL</span>
                     </div>
                   ))}
                 </div>
@@ -354,84 +252,33 @@ const handleSolPayment = async () => {
                 <div className="border-t border-gray-700 pt-4 mb-6">
                   <div className="flex justify-between text-lg font-bold">
                     <span className="text-white">Total:</span>
-                    <span className="text-cyan-400">
-                      {total.toFixed(3)} SOL
-                    </span>
+                    <span className="text-cyan-400">{total.toFixed(3)} SOL</span>
                   </div>
                 </div>
 
-                {/* Payment Method Selection */}
+                {/* Payment Method */}
                 <div className="mb-6">
-                  <Label className="text-cyan-400 mb-3 block">
-                    Payment Method
-                  </Label>
-                  <div className="grid grid-cols-1 gap-3">
-                    <button
-                      onClick={() => setPaymentMethod("demo")}
-                      className={`p-4 rounded-lg border transition-all hidden items-center space-x-3 ${
-                        paymentMethod === "demo"
-                          ? "border-cyan-400 bg-cyan-400/10"
-                          : "border-gray-600 hover:border-gray-500"
-                      }`}
-                    >
-                      <CreditCard className="h-5 w-5 text-cyan-400" />
-                      <div className="text-left">
-                        <p className="font-medium text-white">Demo Payment</p>
-                        <p className="text-sm text-gray-400">
-                          For testing purposes
-                        </p>
+                  <Label className="text-cyan-400 mb-3 block">Payment Method</Label>
+                  <div className="p-4 rounded-lg border border-cyan-400 bg-cyan-400/10">
+                    <div className="flex items-center space-x-3">
+                      <Smartphone className="h-5 w-5 text-cyan-400" />
+                      <div>
+                        <p className="font-medium text-white">Pay with SOL (QR Code)</p>
+                        <p className="text-sm text-gray-400">Scan QR code with your Solana wallet</p>
                       </div>
-                    </button>
-
-                    <button
-                      onClick={() => setPaymentMethod("sol")}
-                      className={`p-4 rounded-lg border transition-all flex items-center space-x-3 ${
-                        paymentMethod === "sol"
-                          ? "border-cyan-400 bg-cyan-400/10"
-                          : "border-gray-600 hover:border-gray-500"
-                      }`}
-                    >
-                      <Wallet className="h-5 w-5 text-cyan-400" />
-                      <div className="text-left">
-                        <p className="font-medium text-white">Pay with SOL</p>
-                        <p className="text-sm text-gray-400">
-                          {connected
-                            ? `Connected: ${publicKey
-                                ?.toString()
-                                .slice(0, 8)}...`
-                            : "Connect wallet required"}
-                        </p>
-                      </div>
-                    </button>
+                    </div>
                   </div>
                 </div>
 
                 <Button
-                  onClick={handlePayment}
-                  disabled={loading || (paymentMethod === "sol" && !connected)}
-                  className="w-full bg-cyan-500 hover:bg-cyan-400 text-black text-lg py-6 font-bold transition-all duration-200"
+                  onClick={handleSolPayment}
+                  className="w-full bg-cyan-500 hover:bg-cyan-400 text-black text-lg py-6 font-bold transition-all duration-200 group"
                 >
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      Processing...
-                    </>
-                  ) : paymentMethod === "sol" ? (
-                    connected ? (
-                      "Pay with SOL"
-                    ) : (
-                      "Connect Wallet First"
-                    )
-                  ) : (
-                    "Complete Demo Order"
-                  )}
+                  Generate Payment QR Code
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
 
-                <p className="text-sm text-gray-400 mt-4 text-center">
-                  {paymentMethod === "sol"
-                    ? "Secure payment powered by Solana blockchain"
-                    : "Demo mode - no actual payment required"}
-                </p>
+                <p className="text-sm text-gray-400 mt-4 text-center">Secure payment powered by Solana blockchain</p>
               </CardContent>
             </Card>
           </div>
@@ -440,5 +287,5 @@ const handleSolPayment = async () => {
 
       <Footer />
     </div>
-  );
+  )
 }
