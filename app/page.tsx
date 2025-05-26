@@ -6,7 +6,7 @@ import { getFeaturedProducts } from "@/lib/products"
 import Link from "next/link"
 import Image from "next/image"
 import { Footer } from "@/components/footer"
-import { ArrowRight, Zap, Star, Shield, Truck, Award } from "lucide-react"
+import { ArrowRight, Zap, Star, Shield, Truck,Users, Award } from "lucide-react"
 
 export default function HomePage() {
   const featuredProducts = getFeaturedProducts()
