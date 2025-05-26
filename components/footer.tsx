@@ -36,7 +36,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-6 pt-6 text-center">
-          <p className="text-gray-500 text-xs">© 2024 ZULE MESH</p>
+          <p className="text-gray-500 text-xs">© 2025 ZULE MESH</p>
         </div>
       </div>
     </footer>
