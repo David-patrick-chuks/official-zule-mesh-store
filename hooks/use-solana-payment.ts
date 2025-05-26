@@ -3,7 +3,7 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import * as web3 from "@solana/web3.js";
 
-const STORE_WALLET = "3LGAYTsaPW1i6dsYuFr3He5rzLLXugH4bZwMEd9mhq4W";
+const STORE_WALLET = "WBmoukHb1gkawaiyQSLYfGtho4VEEWYzitsN1xEYQrh"; // Replace with your store wallet address
 // ✅ Use Helius RPC
 const HELIUS_RPC_URL = "https://mainnet.helius-rpc.com/?api-key=c19acd73-954e-4a71-86f9-0fe7d465004a";
 
