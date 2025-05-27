@@ -25,7 +25,7 @@ export default function TrackingPage() {
     if (email && orderId) {
       handleTrackOrder()
     }
-  }, [])
+  }, [email, orderId])
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
@@ -47,64 +47,27 @@ export default function TrackingPage() {
 
     setLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      const mockOrderData = {
-        orderId,
-        email,
-        status: "shipped",
-        trackingNumber: "ZL" + Math.random().toString(36).substring(2, 10).toUpperCase(),
-        estimatedDelivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-        currentLocation: "Distribution Center - Los Angeles, CA",
-        orderDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-        shippingMethod: "Standard Shipping (7-10 business days)",
-        carrier: "ZULE Express",
-        items: [
-          { name: "ZULE Ghost Tee", size: "L", color: "Black", quantity: 1 },
-          { name: "CAPTCHA Breaker Hoodie", size: "M", color: "Neon Blue", quantity: 1 },
-        ],
-        timeline: [
-          {
-            status: "Order Confirmed",
-            date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-            time: "2:30 PM",
-            completed: true,
-            description: "Your order has been confirmed and payment processed",
-          },
-          {
-            status: "Processing",
-            date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-            time: "10:15 AM",
-            completed: true,
-            description: "Order is being prepared and packaged",
-          },
-          {
-            status: "Shipped",
-            date: new Date().toLocaleDateString(),
-            time: "8:45 AM",
-            completed: true,
-            description: "Package has been shipped and is in transit",
-          },
-          {
-            status: "Out for Delivery",
-            date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-            time: "Expected",
-            completed: false,
-            description: "Package is out for delivery to your address",
-          },
-          {
-            status: "Delivered",
-            date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-            time: "Expected",
-            completed: false,
-            description: "Package delivered to your address",
-          },
-        ],
+    try {
+      const response = await fetch(
+        `https://solanapay-2r3u.onrender.com/api/tracking?email=${encodeURIComponent(email)}&orderId=${encodeURIComponent(orderId)}`
+      )
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      setOrderStatus(mockOrderData)
+      const data = await response.json()
+      setOrderStatus(data)
+    } catch (error) {
+      console.error("Error tracking order:", error)
+      toast({
+        title: "Tracking Failed",
+        description: "Unable to retrieve order status. Please check your details or try again later.",
+        variant: "destructive",
+      })
+    } finally {
       setLoading(false)
-    }, 1500)
+    }
   }
 
   const getStatusColor = (status: string) => {
