@@ -96,7 +96,7 @@ export default function HomePage() {
                 {/* Main character image */}
                 <div className="relative z-10">
                   <Image
-                    src="/placeholder.svg?height=500&width=500"
+                    src="/zule.png"
                     alt="ZULE - The AI Ghost"
                     width={500}
                     height={500}

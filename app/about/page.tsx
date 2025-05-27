@@ -38,7 +38,7 @@ export default function AboutPage() {
               <div className="relative inline-block mb-12">
                 <div className="absolute inset-0 bg-cyan-500/20 rounded-full blur-3xl scale-150" />
                 <Image
-                  src="/placeholder.svg?height=400&width=400"
+                  src="/zule.png"
                   alt="ZULE AI Ghost"
                   width={400}
                   height={400}
