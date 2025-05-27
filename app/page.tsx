@@ -119,7 +119,7 @@ export default function HomePage() {
       </section>
 
       {/* Featured Products */}
-      {/* <section className="py-24 px-4 bg-gradient-to-b from-transparent to-gray-900/20">
+      <section className="py-24 px-4 bg-gradient-to-b from-transparent to-gray-900/20">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16 space-y-4">
             <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20 mb-4">
@@ -179,7 +179,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section> */}
+      </section>
 
       {/* <section className="py-16 px-4">
         <div className="container mx-auto max-w-4xl text-center">
