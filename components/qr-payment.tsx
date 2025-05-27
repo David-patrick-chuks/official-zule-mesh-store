@@ -18,12 +18,14 @@ import Image from "next/image";
 
 interface QRPaymentProps {
   total: number;
+  orderId: string; // Unique identifier for the order, used to record payment success
   onPaymentSuccess: (reference: string) => void;
   onPaymentCancel: () => void;
 }
 
 export function QRPayment({
   total,
+  orderId,
   onPaymentSuccess,
   onPaymentCancel,
 }: QRPaymentProps) {
@@ -105,7 +107,7 @@ export function QRPayment({
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ reference, orderId: "ZULETEMP123" }), // Replace with actual orderId
+            body: JSON.stringify({ reference, orderId: orderId }), // Replace with actual orderId
           }
         );
 
