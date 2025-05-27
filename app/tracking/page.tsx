@@ -25,7 +25,7 @@ export default function TrackingPage() {
     if (email && orderId) {
       handleTrackOrder()
     }
-  }, [email, orderId])
+  }, [])
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
