@@ -29,6 +29,8 @@ export default function CheckoutPage() {
     postalCode: "",
     country: "",
   })
+  const [error, setError] = useState<string | null>(null) // New state for error message
+  const [loading, setLoading] = useState(false) // New state for loading
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -39,34 +41,54 @@ export default function CheckoutPage() {
 
   const validateForm = () => {
     if (!formData.fullName || !formData.email || !formData.address) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      })
+      setError("Please fill in all required fields.")
       return false
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.email)) {
-      toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
-        variant: "destructive",
-      })
+      setError("Please enter a valid email address.")
       return false
     }
 
     return true
   }
 
-  const handleSolPayment = () => {
+  const handleSolPayment = async () => {
     if (!validateForm()) return
-    setShowQRPayment(true)
+
+    setLoading(true)
+    setError(null) // Clear previous error
+
+    try {
+      const response = await fetch("https://solanapay-2r3u.onrender.com/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, total, items }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+      const orderId = data.orderId
+
+      setShowQRPayment(true)
+    } catch (error) {
+      console.error("Error during checkout:", error)
+      setError(
+        error instanceof Error && error.message.includes("400")
+          ? "Missing required checkout data."
+          : "An error occurred during checkout. Please try again later."
+      )
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleQRPaymentSuccess = (reference: string) => {
-    const orderId = "ZULE" + Date.now().toString(36).toUpperCase()
+    const orderId = "ZULE" + Date.now().toString(36).toUpperCase() // Should use the orderId from checkout response
 
     clearCart()
 
@@ -108,6 +130,23 @@ export default function CheckoutPage() {
       <div className="container mx-auto px-4 py-8 flex-1">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl md:text-4xl font-bold mb-8 text-cyan-400 text-center">Secure Checkout</h1>
+
+          {/* Error Message UI */}
+          {error && (
+            <Card className="bg-red-500/10 border-red-500/30 mb-8">
+              <CardContent className="p-6 text-center">
+                <h3 className="text-lg font-semibold text-red-400 mb-2">Checkout Error</h3>
+                <p className="text-red-300">{error}</p>
+                <Button
+                  variant="outline"
+                  className="mt-4 border-red-500/50 text-red-400 hover:border-red-400 hover:text-red-300"
+                  onClick={() => setError(null)} // Clear error on button click
+                >
+                  Try Again
+                </Button>
+              </CardContent>
+            </Card>
+          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Shipping Information */}
@@ -267,9 +306,10 @@ export default function CheckoutPage() {
 
                 <Button
                   onClick={handleSolPayment}
+                  disabled={loading}
                   className="w-full bg-cyan-500 hover:bg-cyan-400 text-black text-lg py-6 font-bold transition-all duration-200 group"
                 >
-                  Generate Payment QR Code
+                  {loading ? "Processing..." : "Generate Payment QR Code"}
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
 

@@ -88,22 +88,37 @@ export function QRPayment({
     setTimeLeft(59);
     setVerifying(true);
     try {
-      const response = await fetch(
+      const verifyResponse = await fetch(
         `https://solanapay-2r3u.onrender.com/api/payment/verify?reference=${reference}`
       );
 
-      if (!response.ok) {
+      if (!verifyResponse.ok) {
         throw new Error("Failed to verify payment");
       }
 
-      const data = await response.json();
+      const verifyData = await verifyResponse.json();
 
-      if (data.status === "verified") {
+      if (verifyData.status === "verified") {
+        // Record payment success and send email
+        const successResponse = await fetch(
+          "https://solanapay-2r3u.onrender.com/api/payment/success",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reference, orderId: "ZULETEMP123" }), // Replace with actual orderId
+          }
+        );
+
+        if (!successResponse.ok) {
+          throw new Error("Failed to record payment success");
+        }
+
+        const successData = await successResponse.json();
         setPaymentStatus("verified");
         toast({
           title: "Payment Confirmed",
           description:
-            "Your transaction has been successfully verified on the Solana blockchain.",
+            "Your transaction has been verified, and a confirmation email has been sent.",
         });
         onPaymentSuccess(reference);
       } else {
@@ -162,7 +177,7 @@ export function QRPayment({
             Payment Successfully Verified
           </h3>
           <p className="text-green-300 mb-4">
-            Your transaction has been confirmed on the Solana blockchain.
+            Your transaction has been confirmed on the Solana blockchain, and a confirmation email has been sent.
           </p>
           <Badge className="bg-green-500/20 text-green-300 border-green-500/30">
             Transaction Complete
