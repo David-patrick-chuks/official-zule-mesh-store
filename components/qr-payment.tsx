@@ -1,131 +1,155 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { useToast } from "@/hooks/use-toast"
-import { Loader2, CheckCircle, QrCode, RefreshCw, Eye, Clock, Smartphone } from "lucide-react"
-import Image from "next/image"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Loader2,
+  CheckCircle,
+  QrCode,
+  RefreshCw,
+  Eye,
+  Clock,
+  Smartphone,
+} from "lucide-react";
+import Image from "next/image";
 
 interface QRPaymentProps {
-  total: number
-  onPaymentSuccess: (reference: string) => void
-  onPaymentCancel: () => void
+  total: number;
+  onPaymentSuccess: (reference: string) => void;
+  onPaymentCancel: () => void;
 }
 
-export function QRPayment({ total, onPaymentSuccess, onPaymentCancel }: QRPaymentProps) {
-  const [qrCode, setQrCode] = useState<string>("")
-  const [reference, setReference] = useState<string>("")
-  const [loading, setLoading] = useState(false)
-  const [verifying, setVerifying] = useState(false)
-  const [paymentStatus, setPaymentStatus] = useState<"pending" | "verified" | "error">("pending")
-  const [timeLeft, setTimeLeft] = useState(45)
-  const { toast } = useToast()
+export function QRPayment({
+  total,
+  onPaymentSuccess,
+  onPaymentCancel,
+}: QRPaymentProps) {
+  const [qrCode, setQrCode] = useState<string>("");
+  const [reference, setReference] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<
+    "pending" | "verified" | "error"
+  >("pending");
+  const [timeLeft, setTimeLeft] = useState(59);
+  const { toast } = useToast();
 
   const generateQR = async () => {
-    setLoading(true)
-    setPaymentStatus("pending")
+    setLoading(true);
+    setPaymentStatus("pending");
     try {
-      const response = await fetch("https://solanapay-2r3u.onrender.com/api/payment/qr-live", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          total: total,
-        }),
-      })
+      const response = await fetch(
+        "https://solanapay-2r3u.onrender.com/api/payment/qr-live",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            total: total,
+          }),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("Failed to generate QR code")
+        throw new Error("Failed to generate QR code");
       }
 
-      const data = await response.json()
-      setQrCode(data.qrCode)
-      setReference(data.ref)
-      setPaymentStatus("pending")
-      setTimeLeft(45)
+      const data = await response.json();
+      setQrCode(data.qrCode);
+      setReference(data.ref);
+      setPaymentStatus("pending");
+      setTimeLeft(59);
 
       toast({
         title: "Payment QR Code Generated",
-        description: "Please scan the QR code with your Solana wallet to complete your purchase.",
-      })
+        description:
+          "Please scan the QR code with your Solana wallet to complete your purchase.",
+      });
     } catch (error) {
-      console.error("Error generating QR:", error)
+      console.error("Error generating QR:", error);
       toast({
         title: "QR Code Generation Failed",
-        description: "Unable to generate payment QR code. Please refresh and try again.",
+        description:
+          "Unable to generate payment QR code. Please refresh and try again.",
         variant: "destructive",
-      })
-      setPaymentStatus("error")
+      });
+      setPaymentStatus("error");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const verifyPayment = async () => {
-    if (!reference) return
-
-    setVerifying(true)
+    if (!reference) return;
+    setTimeLeft(59);
+    setVerifying(true);
     try {
-      const response = await fetch(`https://solanapay-2r3u.onrender.com/api/payment/verify?reference=${reference}`)
+      const response = await fetch(
+        `https://solanapay-2r3u.onrender.com/api/payment/verify?reference=${reference}`
+      );
 
       if (!response.ok) {
-        throw new Error("Failed to verify payment")
+        throw new Error("Failed to verify payment");
       }
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data.status === "verified") {
-        setPaymentStatus("verified")
+        setPaymentStatus("verified");
         toast({
           title: "Payment Confirmed",
-          description: "Your transaction has been successfully verified on the Solana blockchain.",
-        })
-        onPaymentSuccess(reference)
+          description:
+            "Your transaction has been successfully verified on the Solana blockchain.",
+        });
+        onPaymentSuccess(reference);
       } else {
         toast({
           title: "Payment Pending",
-          description: "Transaction not yet confirmed. Please ensure you've completed the payment in your wallet.",
+          description:
+            "Transaction not yet confirmed. Please ensure you've completed the payment in your wallet.",
           variant: "destructive",
-        })
+        });
       }
     } catch (error) {
-      console.error("Error verifying payment:", error)
+      console.error("Error verifying payment:", error);
       toast({
         title: "Verification Error",
-        description: "Unable to verify payment status. Please try again or contact support.",
+        description:
+          "Unable to verify payment status. Please try again or contact support.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setVerifying(false)
+      setVerifying(false);
     }
-  }
+  };
 
   // Countdown timer for next verification
   useEffect(() => {
     if (reference && paymentStatus === "pending" && timeLeft > 0) {
       const timer = setTimeout(() => {
-        setTimeLeft(timeLeft - 1)
-      }, 1000)
+        setTimeLeft(timeLeft - 1);
+      }, 1000);
 
-      return () => clearTimeout(timer)
+      return () => clearTimeout(timer);
     }
-  }, [timeLeft, reference, paymentStatus])
+  }, [timeLeft, reference, paymentStatus]);
 
-  // Auto-verify every 45 seconds
+  // Auto-verify every 59 seconds
   useEffect(() => {
     if (reference && paymentStatus === "pending" && timeLeft === 0) {
-      verifyPayment()
-      setTimeLeft(45) // Reset timer
+      verifyPayment();
+      setTimeLeft(59); // Reset timer
     }
-  }, [timeLeft, reference, paymentStatus])
+  }, [timeLeft, reference, paymentStatus]);
 
   // Generate QR on component mount
   useEffect(() => {
-    generateQR()
-  }, [])
+    generateQR();
+  }, []);
 
   if (paymentStatus === "verified") {
     return (
@@ -134,12 +158,18 @@ export function QRPayment({ total, onPaymentSuccess, onPaymentCancel }: QRPaymen
           <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="h-10 w-10 text-green-400" />
           </div>
-          <h3 className="text-2xl font-bold text-white mb-3">Payment Successfully Verified</h3>
-          <p className="text-green-300 mb-4">Your transaction has been confirmed on the Solana blockchain.</p>
-          <Badge className="bg-green-500/20 text-green-300 border-green-500/30">Transaction Complete</Badge>
+          <h3 className="text-2xl font-bold text-white mb-3">
+            Payment Successfully Verified
+          </h3>
+          <p className="text-green-300 mb-4">
+            Your transaction has been confirmed on the Solana blockchain.
+          </p>
+          <Badge className="bg-green-500/20 text-green-300 border-green-500/30">
+            Transaction Complete
+          </Badge>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
@@ -154,12 +184,16 @@ export function QRPayment({ total, onPaymentSuccess, onPaymentCancel }: QRPaymen
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white">Solana Payment</h3>
-                <p className="text-cyan-300">Scan QR code to complete your order</p>
+                <p className="text-cyan-300">
+                  Scan QR code to complete your order
+                </p>
               </div>
             </div>
             <div className="text-right">
               <p className="text-sm text-gray-400">Total Amount</p>
-              <p className="text-2xl font-bold text-cyan-400">{total.toFixed(3)} SOL</p>
+              <p className="text-2xl font-bold text-cyan-400">
+                {total.toFixed(3)} SOL
+              </p>
             </div>
           </div>
         </CardContent>
@@ -178,11 +212,15 @@ export function QRPayment({ total, onPaymentSuccess, onPaymentCancel }: QRPaymen
                 paymentStatus === "pending"
                   ? "bg-yellow-500/20 text-yellow-300 border-yellow-500/30"
                   : paymentStatus === "error"
-                    ? "bg-red-500/20 text-red-300 border-red-500/30"
-                    : "bg-green-500/20 text-green-300 border-green-500/30"
+                  ? "bg-red-500/20 text-red-300 border-red-500/30"
+                  : "bg-green-500/20 text-green-300 border-green-500/30"
               }`}
             >
-              {paymentStatus === "pending" ? "Awaiting Payment" : paymentStatus === "error" ? "Error" : "Verified"}
+              {paymentStatus === "pending"
+                ? "Awaiting Payment"
+                : paymentStatus === "error"
+                ? "Error"
+                : "Verified"}
             </Badge>
           </CardTitle>
         </CardHeader>
@@ -193,7 +231,9 @@ export function QRPayment({ total, onPaymentSuccess, onPaymentCancel }: QRPaymen
               <div className="w-80 h-80 bg-gray-800/50 rounded-2xl border-2 border-dashed border-gray-600 flex items-center justify-center">
                 <div className="text-center">
                   <Loader2 className="h-12 w-12 text-cyan-400 animate-spin mx-auto mb-4" />
-                  <p className="text-gray-400">Generating secure payment QR code...</p>
+                  <p className="text-gray-400">
+                    Generating secure payment QR code...
+                  </p>
                 </div>
               </div>
             ) : qrCode ? (
@@ -211,7 +251,9 @@ export function QRPayment({ total, onPaymentSuccess, onPaymentCancel }: QRPaymen
                   <div className="absolute inset-0 bg-black/70 rounded-2xl flex items-center justify-center backdrop-blur-sm">
                     <div className="text-center">
                       <Loader2 className="h-8 w-8 text-cyan-400 animate-spin mx-auto mb-3" />
-                      <p className="text-white font-medium">Verifying payment status...</p>
+                      <p className="text-white font-medium">
+                        Verifying payment status...
+                      </p>
                     </div>
                   </div>
                 )}
@@ -266,7 +308,9 @@ export function QRPayment({ total, onPaymentSuccess, onPaymentCancel }: QRPaymen
               <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700">
                 <div className="flex items-center space-x-2 mb-2">
                   <Clock className="h-4 w-4 text-cyan-400" />
-                  <span className="text-sm text-gray-400">Next verification in</span>
+                  <span className="text-sm text-gray-400">
+                    Next verification in
+                  </span>
                 </div>
                 <p className="text-xl font-bold text-white">{timeLeft}s</p>
               </div>
@@ -321,11 +365,12 @@ export function QRPayment({ total, onPaymentSuccess, onPaymentCancel }: QRPaymen
 
           <div className="text-center">
             <p className="text-xs text-gray-500">
-              Payment verification occurs automatically every 45 seconds. You can also verify manually at any time.
+              Payment verification occurs automatically every 59 seconds. You
+              can also verify manually at any time.
             </p>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
