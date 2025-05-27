@@ -172,7 +172,7 @@ export function QRPayment({
     return (
       <Card className="bg-gradient-to-br from-cyan-500/10 via-transparent to-cyan-500/5  border-cyan-500/20">
         <CardContent className="p-12 text-center">
-          <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="w-20 h-20 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="h-10 w-10 text-cyan-400" />
           </div>
           <h3 className="text-2xl font-bold text-white mb-3">
@@ -181,7 +181,7 @@ export function QRPayment({
           <p className="text-cyan-400 mb-4">
             Your transaction has been confirmed on the Solana blockchain, and a confirmation email has been sent.
           </p>
-          <Badge className="bg-green-500/20 text-cyan-400 border-cyan-500/20">
+          <Badge className="bg-cyan-500/20 text-cyan-400 border-cyan-500/20">
             Transaction Complete
           </Badge>
         </CardContent>
