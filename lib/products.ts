@@ -15,7 +15,8 @@ export const products: Product[] = [
   {
     id: "zule-ghost-tee",
     name: "ZULE Ghost Tee",
-    price: 0.15,
+    // price: 0.15,
+    price: 0.003,
     category: "tees",
     images: [
       "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=600&fit=crop&crop=center",
