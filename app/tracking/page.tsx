@@ -18,6 +18,7 @@ export default function TrackingPage() {
   const [orderId, setOrderId] = useState(searchParams.get("orderId") || "")
   const [orderStatus, setOrderStatus] = useState<any>(null)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null) // New state for error message
   const { toast } = useToast()
 
   // Auto-track if URL params are present
@@ -37,15 +38,13 @@ export default function TrackingPage() {
 
   const handleTrackOrder = async () => {
     if (!email || !orderId) {
-      toast({
-        title: "Missing Information",
-        description: "Please enter both email and order ID.",
-        variant: "destructive",
-      })
+      setError("Please enter both email and order ID.")
       return
     }
 
     setLoading(true)
+    setError(null) // Clear previous error
+    setOrderStatus(null) // Clear previous order status
 
     try {
       const response = await fetch(
@@ -53,18 +52,18 @@ export default function TrackingPage() {
       )
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        if (response.status === 404) {
+          setError("Order not found. Please check your email and order ID, or contact support.")
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+      } else {
+        const data = await response.json()
+        setOrderStatus(data)
       }
-
-      const data = await response.json()
-      setOrderStatus(data)
     } catch (error) {
       console.error("Error tracking order:", error)
-      toast({
-        title: "Tracking Failed",
-        description: "Unable to retrieve order status. Please check your details or try again later.",
-        variant: "destructive",
-      })
+      setError("An error occurred while tracking your order. Please try again later.")
     } finally {
       setLoading(false)
     }
@@ -158,6 +157,23 @@ export default function TrackingPage() {
               </Button>
             </CardContent>
           </Card>
+
+          {/* Error Message UI */}
+          {error && (
+            <Card className="bg-red-500/10 border-red-500/30 mb-8">
+              <CardContent className="p-6 text-center">
+                <h3 className="text-lg font-semibold text-red-400 mb-2">Tracking Error</h3>
+                <p className="text-red-300">{error}</p>
+                <Button
+                  variant="outline"
+                  className="mt-4 border-red-500/50 text-red-400 hover:border-red-400 hover:text-red-300"
+                  onClick={() => setError(null)} // Clear error on button click
+                >
+                  Try Again
+                </Button>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Order Status Results */}
           {orderStatus && (
