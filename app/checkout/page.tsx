@@ -101,7 +101,7 @@ export default function CheckoutPage() {
       description: `Order ${orderId} has been placed successfully.`,
     })
 
-    router.push(`/payment-success?orderId=${orderId}&txHash=${reference}`)
+    // router.push(`/payment-success?orderId=${orderId}&txHash=${reference}`)
   }
 
   const handleQRPaymentCancel = () => {
