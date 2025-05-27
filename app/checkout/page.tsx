@@ -29,8 +29,9 @@ export default function CheckoutPage() {
     postalCode: "",
     country: "",
   })
-  const [error, setError] = useState<string | null>(null) // New state for error message
-  const [loading, setLoading] = useState(false) // New state for loading
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [orderId, setOrderId] = useState<string | null>(null) // Store orderId from checkout response
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -58,7 +59,7 @@ export default function CheckoutPage() {
     if (!validateForm()) return
 
     setLoading(true)
-    setError(null) // Clear previous error
+    setError(null)
 
     try {
       const response = await fetch("https://solanapay-2r3u.onrender.com/api/checkout", {
@@ -72,8 +73,8 @@ export default function CheckoutPage() {
       }
 
       const data = await response.json()
-      const orderId = data.orderId
-
+      const newOrderId = data.orderId
+      setOrderId(newOrderId) // Store the orderId from the response
       setShowQRPayment(true)
     } catch (error) {
       console.error("Error during checkout:", error)
@@ -88,7 +89,10 @@ export default function CheckoutPage() {
   }
 
   const handleQRPaymentSuccess = (reference: string) => {
-    const orderId = "ZULE" + Date.now().toString(36).toUpperCase() // Should use the orderId from checkout response
+    if (!orderId) {
+      console.error("No orderId available for payment success.")
+      return
+    }
 
     clearCart()
 
@@ -113,6 +117,7 @@ export default function CheckoutPage() {
             <h1 className="text-3xl md:text-4xl font-bold mb-8 text-cyan-400 text-center">Complete Payment</h1>
             <QRPayment
               total={total}
+              orderId={orderId!} // Pass the stored orderId to QRPayment
               onPaymentSuccess={handleQRPaymentSuccess}
               onPaymentCancel={handleQRPaymentCancel}
             />
@@ -140,7 +145,7 @@ export default function CheckoutPage() {
                 <Button
                   variant="outline"
                   className="mt-4 border-red-500/50 text-red-400 hover:border-red-400 hover:text-red-300"
-                  onClick={() => setError(null)} // Clear error on button click
+                  onClick={() => setError(null)}
                 >
                   Try Again
                 </Button>
