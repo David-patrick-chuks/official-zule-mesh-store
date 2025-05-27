@@ -82,11 +82,6 @@ export default function CheckoutPage() {
     setShowQRPayment(false)
   }
 
-  // if (items.length === 0) {
-  //   router.push("/cart")
-  //   return null
-  // }
-
   if (showQRPayment) {
     return (
       <div className="min-h-screen bg-black flex flex-col">

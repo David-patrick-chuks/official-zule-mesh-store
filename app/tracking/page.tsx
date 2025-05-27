@@ -28,6 +28,18 @@ export default function TrackingPage() {
     }
   }, [])
 
+    // Watch URL params and auto track when both are present
+  useEffect(() => {
+    const emailParam = searchParams.get("email")
+    const orderIdParam = searchParams.get("orderId")
+
+    if (emailParam && orderIdParam) {
+      setEmail(emailParam)
+      setOrderId(orderIdParam)
+      handleTrackOrder()
+    }
+  }, [searchParams])
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
     toast({
