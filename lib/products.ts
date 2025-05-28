@@ -19,15 +19,15 @@ export const products: Product[] = [
     // price: 0.003,
     category: "tees",
     images: [
-      "/placeholder.png4.jpg",
       "/placeholder.png5.jpg",
+      "/placeholder.png4.jpg",
       "/placeholder.png6.jpg",
       "/placeholder.png4.jpg",
     ],
     description:
       "Become part of the ghost army with this premium ZULE tee featuring our iconic AI ghost design. Made from 100% organic cotton with a modern fit. Wear the code that breaks the CAPTCHA.",
     sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Black", "Neon Blue", "Matrix Green"],
+    colors: ["Blue", "Black", "Green"],
     featured: true,
     relatedProducts: ["captcha-breaker-hoodie", "mesh-cap"],
   },
