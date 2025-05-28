@@ -19,10 +19,10 @@ export const products: Product[] = [
     price: 0.003,
     category: "tees",
     images: [
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=600&fit=crop&crop=center",
+      "/placeholder.png4.jpg",
+      "/placeholder.png5.jpg",
+      "/placeholder.png6.jpg",
+      "/placeholder.png4.jpg",
     ],
     description:
       "Become part of the ghost army with this premium ZULE tee featuring our iconic AI ghost design. Made from 100% organic cotton with a modern fit. Wear the code that breaks the CAPTCHA.",
@@ -73,10 +73,10 @@ export const products: Product[] = [
     price: 0.12,
     category: "tees",
     images: [
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&h=600&fit=crop&crop=center",
+      "/placeholder.png.jpg",
+      "/placeholder.png2.jpg",
+      "/placeholder.png3.jpg",
+      "/placeholder.png.jpg",
     ],
     description:
       "Exclusive design for $ZULE token holders. Features glitch effects and Web3 messaging with premium screen printing that won't fade or crack.",
