@@ -67,14 +67,13 @@ export const products: Product[] = [
   },
   {
     id: "token-holder-tee",
-    name: "$ZULE Token Holder Tee",
+    name: "$ZULE Token Tee",
     price: 0.12,
     category: "tees",
     images: [
-      "/placeholder.png.jpg",
-      "/placeholder.png2.jpg",
-      "/placeholder.png3.jpg",
-      "/placeholder.png.jpg",
+      "/ZuleTee1.jpg",
+      "/ZuleTee2.jpg",
+      "/ZuleTee3.jpg",
     ],
     description:
       "Exclusive design for $ZULE token holders. Features glitch effects and Web3 messaging with premium screen printing that won't fade or crack.",
@@ -88,29 +87,15 @@ export const products: Product[] = [
     price: 0.22,
     category: "hoodies",
     images: [
-      "/ZuleGhost1.jpg",
-      "/ZuleGhost2.jpg",
-      "/ZuleGhost3.jpg",
+      "/ZulehoodieNoface1.jpg",
+      "/ZulehoodieNoface2.jpg",
+      "/ZulehoodieNoface3.jpg",
     ],
     description:
       "Premium heavyweight hoodie with large ZULE ghost graphic on the back and subtle logo on the front. Made from sustainable materials.",
     sizes: ["S", "M", "L", "XL", "XXL"],
     colors: ["Black", "Neon Blue", "Cyber Gray"],
     relatedProducts: ["captcha-breaker-hoodie", "token-holder-tee"],
-  },
-  {
-    id: "decentralized-cap",
-    name: "Decentralized Cap",
-    price: 0.09,
-    category: "caps",
-    images: [
-       "/Zuleman.jpg",
-    ],
-    description:
-      'Snapback cap with "DECENTRALIZED" embroidery and ZULE logo. Features a flat brim and structured crown for a modern look.',
-    sizes: ["One Size"],
-    colors: ["Black", "Neon Blue", "Matrix Green"],
-    relatedProducts: ["mesh-cap", "zule-ghost-tee"],
   },
 ]
 
