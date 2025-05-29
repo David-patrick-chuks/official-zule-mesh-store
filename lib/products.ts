@@ -37,7 +37,9 @@ export const products: Product[] = [
     price: 0.25,
     category: "hoodies",
     images: [
-       "/Zulehoodie.jpg",
+       "/Zulehoodie1.jpg",
+       "/Zulehoodie2.jpg",
+       "/Zulehoodie3.jpg",
     ],
     description:
       "Premium heavyweight hoodie with ZULE branding and $ZULE token callouts. Features a kangaroo pocket and adjustable drawstring hood. Perfect for late-night coding sessions and representing the AI revolution.",
