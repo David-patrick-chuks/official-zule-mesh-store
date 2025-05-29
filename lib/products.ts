@@ -37,10 +37,7 @@ export const products: Product[] = [
     price: 0.25,
     category: "hoodies",
     images: [
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=600&h=600&fit=crop&crop=center",
+       "/Zulehoodie.jpg",
     ],
     description:
       "Premium heavyweight hoodie with ZULE branding and $ZULE token callouts. Features a kangaroo pocket and adjustable drawstring hood. Perfect for late-night coding sessions and representing the AI revolution.",
@@ -55,10 +52,9 @@ export const products: Product[] = [
     price: 0.08,
     category: "caps",
     images: [
-      "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1521369909029-2afed882baee?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&h=600&fit=crop&crop=center",
+      "/Zulecap1.jpg",
+      "/Zulecap2.jpg",
+      "/Zulecap3.jpg",
     ],
     description:
       "Futuristic mesh cap with embroidered ZULE logo and adjustable snapback closure. Premium materials with moisture-wicking technology. Show your allegiance to the AI revolution in style.",
@@ -90,10 +86,7 @@ export const products: Product[] = [
     price: 0.22,
     category: "hoodies",
     images: [
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=600&h=600&fit=crop&crop=center",
+      "/Zulehoodie.jpg",
     ],
     description:
       "Premium heavyweight hoodie with large ZULE ghost graphic on the back and subtle logo on the front. Made from sustainable materials.",
@@ -107,10 +100,7 @@ export const products: Product[] = [
     price: 0.09,
     category: "caps",
     images: [
-      "https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1521369909029-2afed882baee?w=600&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&h=600&fit=crop&crop=center",
+       "/Zuleman.jpg",
     ],
     description:
       'Snapback cap with "DECENTRALIZED" embroidery and ZULE logo. Features a flat brim and structured crown for a modern look.',
