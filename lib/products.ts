@@ -88,7 +88,9 @@ export const products: Product[] = [
     price: 0.22,
     category: "hoodies",
     images: [
-      "/Zulehoodie.jpg",
+      "/ZuleGhost1.jpg",
+      "/ZuleGhost2.jpg",
+      "/ZuleGhost3.jpg",
     ],
     description:
       "Premium heavyweight hoodie with large ZULE ghost graphic on the back and subtle logo on the front. Made from sustainable materials.",
