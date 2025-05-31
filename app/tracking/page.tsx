@@ -21,6 +21,7 @@ export default function TrackingPage() {
   const [error, setError] = useState<string | null>(null) // New state for error message
   const { toast } = useToast()
 
+  
   // Auto-track if URL params are present
   useEffect(() => {
     if (email && orderId) {
@@ -60,7 +61,7 @@ export default function TrackingPage() {
 
     try {
       const response = await fetch(
-        `https://solanapay-2r3u.onrender.com/api/tracking?email=${encodeURIComponent(email)}&orderId=${encodeURIComponent(orderId)}`
+        `https://solanapay-5mrm.onrender.com/api/tracking?email=${encodeURIComponent(email)}&orderId=${encodeURIComponent(orderId)}`
       )
 
       if (!response.ok) {

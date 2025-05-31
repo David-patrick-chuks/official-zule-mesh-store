@@ -44,7 +44,7 @@ export function QRPayment({
     setPaymentStatus("pending");
     try {
       const response = await fetch(
-        "https://solanapay-2r3u.onrender.com/api/payment/qr-live",
+        "https://solanapay-5mrm.onrender.com/api/payment/qr-live",
         {
           method: "POST",
           headers: {
@@ -91,7 +91,7 @@ export function QRPayment({
     setVerifying(true);
     try {
       const verifyResponse = await fetch(
-        `https://solanapay-2r3u.onrender.com/api/payment/verify?reference=${reference}`
+        `https://solanapay-5mrm.onrender.com/api/payment/verify?reference=${reference}`
       );
 
       if (!verifyResponse.ok) {
@@ -103,7 +103,7 @@ export function QRPayment({
       if (verifyData.status === "verified") {
         // Record payment success and send email
         const successResponse = await fetch(
-          "https://solanapay-2r3u.onrender.com/api/payment/success",
+          "https://solanapay-5mrm.onrender.com/api/payment/success",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

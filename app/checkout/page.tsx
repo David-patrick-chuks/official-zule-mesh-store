@@ -1,18 +1,18 @@
 "use client"
 
-import type React from "react"
-import { useState } from "react"
+import { useCart } from "@/components/cart-provider"
+import { Footer } from "@/components/footer"
 import { Navigation } from "@/components/navigation"
+import { QRPayment } from "@/components/qr-payment"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useCart } from "@/components/cart-provider"
 import { useToast } from "@/hooks/use-toast"
+import { ArrowRight, Smartphone } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { Footer } from "@/components/footer"
-import { QRPayment } from "@/components/qr-payment"
-import { Smartphone, ArrowRight } from "lucide-react"
+import type React from "react"
+import { useState } from "react"
 
 export default function CheckoutPage() {
   const { items, total, clearCart } = useCart()
@@ -62,7 +62,7 @@ export default function CheckoutPage() {
     setError(null)
 
     try {
-      const response = await fetch("https://solanapay-2r3u.onrender.com/api/checkout", {
+      const response = await fetch("https://solanapay-5mrm.onrender.com/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, total, items }),
